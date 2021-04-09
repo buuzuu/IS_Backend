@@ -21,8 +21,27 @@ router.post('/getNearBy', async(req, res) => {
 })
 
 
+router.post('/getCurrentDayDeliveryTime', async(req, res) => {
+    const data = {
+        businessEmail: req.body.businessEmail
+    }
+    var dayName = req.body.dayName.toLowerCase()
+    axios.post('https://cs615-project.herokuapp.com/business/getBusinessDayAndTime', data)
+        .then((response) => {
+            var w = response.data
+            w.forEach(element => {
+                if (element.dayName === dayName) {
+                    return res.send(element)
+                }
+            });
+            return res.send({ error: 'Day Provided is wrong.' })
+        }).catch((err) => {
+            console.error(err);
+            return res.send({
+                error: err
+            })
+        });
 
-
-
+})
 
 module.exports = router;
